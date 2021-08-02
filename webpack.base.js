@@ -1,5 +1,3 @@
-/* global __dirname */
-
 const path = require('path');
 
 // Babel Loader
@@ -29,6 +27,7 @@ const useESLintLoader = {
   use: {
     loader: 'eslint-loader',
     options: {
+      root: true,
       configFile: path.resolve(__dirname, './.eslintrc'),
       ignore: path.resolve(__dirname, './.eslintignore'),
       failOnWarning: false,
@@ -37,19 +36,17 @@ const useESLintLoader = {
   }
 };
 
-// Underscore Loader
-const useUnderscoreLoader = {
-  test: /\.html$/,
-  use: {
-    loader: 'underscore-template-loader',
-    options: {
-      engine: 'underscore',
-      prependFilenameComment: __dirname,
-      evaluate: /{{([\s\S]+?)}}/g,
-      interpolate: /{{=([\s\S]+?)}}/g,
-      escape: /{{-([\s\S]+?)}}/g
-    }
-  }
+const useLitSassLoader = {
+  test: /\.css|\.s(c|a)ss$/,
+  use: [
+    {
+      loader: 'lit-scss-loader',
+      options: {
+        minify: true, // defaults to false
+      },
+    },
+    'extract-loader', 'css-loader', 'sass-loader'
+  ]
 };
 
 module.exports = {
@@ -66,7 +63,7 @@ module.exports = {
     rules: [
       useBabelLoader,
       useESLintLoader,
-      useUnderscoreLoader
+      useLitSassLoader
     ]
 
   }
